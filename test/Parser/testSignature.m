@@ -8,6 +8,7 @@ classdef testSignature < matlab.unittest.TestCase
 
     properties (TestParameter)
         mode = {'timeSeries'};
+%        s55_file = files2namestruct(rdir([toolboxRootPath 'data/testfiles/Nortek/signature_55/v000']));
         s250_file = files2namestruct(rdir([toolboxRootPath 'data/testfiles/Nortek/signature_250/v000']));
         s500_file = files2namestruct(rdir([toolboxRootPath 'data/testfiles/Nortek/signature_500/v000']));
         s1000_file = files2namestruct(rdir([toolboxRootPath 'data/testfiles/Nortek/signature_1000/v000']));
@@ -16,6 +17,13 @@ classdef testSignature < matlab.unittest.TestCase
     end
 
     methods (Test)
+
+%        function testReadSignature250(~, s55_file, mode)
+%            data = signatureParse({s55_file},mode);
+%            assert(strcmp(data{1}.meta.instrument_model,'Signature55'));
+%            assert(strcmp(data{1}.meta.instrument_make,'Nortek'));
+%            assert(data{1}.meta.beam_angle==20);
+%        end
 
         function testReadSignature250(~, s250_file, mode)
             data = signatureParse({s250_file},mode);
