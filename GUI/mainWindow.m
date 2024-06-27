@@ -287,7 +287,7 @@ else
         'HandleVisibility', 'off', ...
         'OnCallback', @onZoomIn, ...
         'OffCallback', 'zoom(''off'')');
-    [img,map,alpha] = imread(fullfile(matlabroot,'mcr','toolbox','matlab','icons','tool_zoom_in.png'));
+    [img,map,alpha] = imread(fullfile(matlabroot,'toolbox','matlab','icons','tool_zoom_in.png'));
     img = double(img)/double(intmax(class(img)));
     img(repmat(alpha==0,[1 1 3])) = NaN;
     zoominb.CData = img;
@@ -297,7 +297,7 @@ else
         'HandleVisibility', 'off', ...
         'OnCallback', @onZoomOut, ...
         'OffCallback', 'zoom(''off'')');
-    [img,map,alpha] = imread(fullfile(matlabroot,'mcr','toolbox','matlab','icons','tool_zoom_out.png'));
+    [img,map,alpha] = imread(fullfile(matlabroot,'toolbox','matlab','icons','tool_zoom_out.png'));
     img = double(img)/double(intmax(class(img)));
     img(repmat(alpha==0,[1 1 3])) = NaN;
     zoomoutb.CData = img;
@@ -307,7 +307,7 @@ else
         'HandleVisibility', 'off', ...
         'OnCallback', 'pan(''on'')', ...
         'OffCallback', 'pan(''off'')');
-    [img,map,alpha] = imread(fullfile(matlabroot,'mcr','toolbox','matlab','icons','tool_hand.png'));
+    [img,map,alpha] = imread(fullfile(matlabroot,'toolbox','matlab','icons','tool_hand.png'));
     img = double(img)/double(intmax(class(img)));
     img(repmat(alpha==0,[1 1 3])) = NaN;
     hPan.CData = img;

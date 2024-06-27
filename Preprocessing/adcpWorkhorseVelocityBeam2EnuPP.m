@@ -29,6 +29,10 @@ end
 if isempty(sample_data) || strcmpi(qcLevel, 'raw')
     return
 end
+qcSet           = str2double(readProperty('toolbox.qc_set'));
+badFlag         = imosQCFlag('bad',             qcSet, 'flag');
+goodFlag        = imosQCFlag('good',            qcSet, 'flag');
+rawFlag         = imosQCFlag('raw',             qcSet, 'flag');
 
 sind = TeledyneADCP.find_teledyne_beam_datasets(sample_data,'HEIGHT_ABOVE_SENSOR');
 dind = TeledyneADCP.find_teledyne_beam_datasets(sample_data,'DIST_ALONG_BEAMS');
@@ -84,19 +88,28 @@ for k = 1:numel(sind)
     vel4_ind = IMOS.find(sample_data{ind}.variables,'VEL4');
 
     I = TeledyneADCP.workhorse_beam2inst(beam_angle);
+    %here we need to check for 3-beam solutions if screening has happened
+    %TODO: get a test in place for 3-beam solutions. Currently, all data is
+    %converted (4-beam solutions)
+    %first apply the flags to NaN out bad data:
+    v1 = sample_data{ind}.variables{vel1_ind}.data;
+    v2 = sample_data{ind}.variables{vel2_ind}.data;
+    v3 = sample_data{ind}.variables{vel3_ind}.data;
+    v4 = sample_data{ind}.variables{vel4_ind}.data;
+    v1(sample_data{ind}.variables{vel1_ind}.flags > 2) = NaN;
+    v2(sample_data{ind}.variables{vel2_ind}.flags > 2) = NaN;
+    v3(sample_data{ind}.variables{vel3_ind}.flags > 2) = NaN;
+    v4(sample_data{ind}.variables{vel4_ind}.flags > 2) = NaN;
+    
     [v1, v2, v3, v4] = TeledyneADCP.workhorse_beam2earth(pitch_bit, ...
         beam_face_config, ...
         sample_data{ind}.variables{head_ind}.data,...
         sample_data{ind}.variables{pitch_ind}.data, ...
         sample_data{ind}.variables{roll_ind}.data,...
-        I, ...
-        sample_data{ind}.variables{vel1_ind}.data, ...
-        sample_data{ind}.variables{vel2_ind}.data, ...
-        sample_data{ind}.variables{vel3_ind}.data, ...
-        sample_data{ind}.variables{vel4_ind}.data);
+        I, v1, v2, v3, v4);
 
     Beam2EnuComment = ['adcpWorkhorseVelocityBeam2EnuPP.m: velocity data in Easting Northing Up (ENU) coordinates has been calculated from velocity data in Beams coordinates ' ...
-        'using heading and tilt information and instrument coordinate transform matrix.'];
+        'using heading and tilt information, 3-beam solutions and instrument coordinate transform matrix.'];
 
     %change in place.
     sample_data{ind}.variables{vel1_ind}.name = vel_vars{1};
@@ -121,6 +134,13 @@ for k = 1:numel(sind)
         end
     end
 
+    %reset flags as any present would have been from screening tests and
+    %apply to beam velocities and would have been used in 3-beam solutions
+    [sample_data{ind}.variables{vel1_ind}.flags, ...
+        sample_data{ind}.variables{vel1_ind}.flags, ...
+        sample_data{ind}.variables{vel1_ind}.flags, ...
+        sample_data{ind}.variables{vel1_ind}.flags] = deal(repmat(rawFlag,size(v1)));
+        
     no_toolbox_tilt_correction = isfield(sample_data{ind}, 'history') && ~contains(sample_data{ind}.history, 'adcpBinMappingPP');
     if no_toolbox_tilt_correction
         %TODO: using warnmsg here would be too verbose - we probably need another function with the scope report level as argument.

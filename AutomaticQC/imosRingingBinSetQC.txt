@@ -1,0 +1,4 @@
+% list of bins to be flagged as bad, separated by a comma and a space
+% eg: bin = 1 or bin = 1, 2, 3
+bin= 2, 4
+
