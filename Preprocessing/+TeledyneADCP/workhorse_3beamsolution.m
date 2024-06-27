@@ -40,7 +40,8 @@ if any(three_beam)
 	data(mask) = 0; %CB forcing "bad beam"  to zero instead of NaN. Now the error vel is 0.
 	tran = ones(length(three_beam), 1) * T(4, :); % CB matrix with rows representing the depth cells with 3 beams, each row represents the error vel transformation
 	err = (data .* tran) * ones(4, 1);% mult the data with the error vel trans matrix
-	data(mask) = -err ./ tran(mask); % CB Assigning the bad beam to its value dependent on other 3 beams
+ 	errmat = -err ./tran;
+    	data(mask) = errmat(mask); % CB Assigning the bad beam to its value dependent on other 3 beams
 	btim(three_beam, :) = data;
 end
 b1 = btim(:,1)';
