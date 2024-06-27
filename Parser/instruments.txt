@@ -68,3 +68,4 @@ RDI, WHLS150-I-1, workhorse
 Nortek, Aquadopp DW 2Mhz, aquadoppVelocity
 Nortek, Aquadopp DW, aquadoppVelocity
 Nortek, Aquadopp DW 2 Mhz, aquadoppVelocity
+RDI, WHS300-I-UG164, workhorse
