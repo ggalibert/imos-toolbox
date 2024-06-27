@@ -84,6 +84,9 @@ switch beam_face_config
 end
 
 for t = 1:size(v1, 1)
+    %get values for 3-beam solutions
+    [b1(t, :), b2(t, :), b3(t, :), b4(t, :)] = TeledyneADCP.workhorse_3beamsolution(I, [b1(t, :); b2(t, :); b3(t, :); b4(t, :)]');
+    
     h_t = heading(t);
     p_t = gpitch(t);
     r_t = adjusted_roll(t);
